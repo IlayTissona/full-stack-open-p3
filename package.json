@@ -17,6 +17,7 @@
     "got": "^9.6.0",
     "heroku": "^7.50.0",
     "js-levenshtein": "^1.1.6",
+    "morgan": "^1.10.0",
     "nodemon": "^2.0.7",
     "phoenix": "^1.5.8",
     "private": "^0.1.8",
