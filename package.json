@@ -1,20 +1,47 @@
 {
-  "name": "full-stack-open-p3",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
-  },
-  "author": "",
-  "license": "ISC",
+  "name": "phone-book",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
+    "@babel/helper-call-delegate": "^7.12.13",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.4.0",
+    "@testing-library/user-event": "^7.2.1",
+    "axios": "^0.19.1",
+    "babel": "^6.23.0",
+    "css-unit-converter": "^1.1.2",
     "express": "^4.17.1",
-    "morgan": "^1.10.0"
+    "js-levenshtein": "^1.1.6",
+    "nodemon": "^2.0.7",
+    "private": "^0.1.8",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-scripts": "3.3.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "server": "json-server -p3001 --watch db.json"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "devDependencies": {
-    "nodemon": "^2.0.7"
-  }
+    "json-server": "^0.15.1"
+  },
+  "proxy": "http://localhost:3001"
 }

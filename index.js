@@ -4,12 +4,12 @@ const PORT = 3001;
 const morgan = require("morgan");
 
 app.use(express.json());
-// app.use(requestLogger);
 app.use(
   morgan(
     ":method :url :status :res[content-length] - :body - :response-time ms"
   )
 );
+app.use("/", express.static("./public/"));
 
 let persons = [
   {
@@ -33,6 +33,10 @@ let persons = [
     number: "0536597328",
   },
 ];
+
+app.get("/", (req, res) => {
+  res.sendFile("./index.html");
+});
 
 app.get("/api/persons", (req, res) => {
   res.json(persons);
