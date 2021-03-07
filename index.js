@@ -5,7 +5,11 @@ const morgan = require("morgan");
 
 app.use(express.json());
 // app.use(requestLogger);
-app.use(morgan("tiny"));
+app.use(
+  morgan(
+    ":method :url :status :res[content-length] - :body - :response-time ms"
+  )
+);
 
 let persons = [
   {
@@ -94,3 +98,7 @@ function requestLogger(request, response, next) {
 function unknownEndpoint(request, response) {
   response.status(404).send({ error: "unknown endpoint" });
 }
+
+morgan.token("body", function (req, res) {
+  return JSON.stringify(req.body);
+});
