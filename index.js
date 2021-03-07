@@ -54,11 +54,21 @@ app.delete("/api/persons/:id", (req, res) => {
 });
 
 app.post("/api/persons", (req, res) => {
+  const requestedPerson = req.body;
+  if (!requestedPerson.number || !requestedPerson.name)
+    return res
+      .status(400)
+      .json({ error: "person must have a name and a number" });
+  let existing = persons.find((person) => person.name === requestedPerson.name);
+  if (existing)
+    return res
+      .status(400)
+      .json({ error: "Requested name has already been taken" });
+
   const id = Math.floor(Math.random() * 100);
-  const person = req.body;
-  person.id = id;
-  persons.push(person);
-  res.send(person);
+  requestedPerson.id = id;
+  persons.push(requestedPerson);
+  res.send(requestedPerson);
 });
 
 app.listen(PORT, () => {
