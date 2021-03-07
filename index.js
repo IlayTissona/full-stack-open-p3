@@ -9,6 +9,7 @@ app.use(
     ":method :url :status :res[content-length] - :body - :response-time ms"
   )
 );
+
 app.use("/", express.static("./build/"));
 
 let persons = [
