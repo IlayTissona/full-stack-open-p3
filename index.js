@@ -44,6 +44,15 @@ app.get("/api/persons/:id", (req, res) => {
   else res.sendStatus(404);
 });
 
+app.delete("/api/persons/:id", (req, res) => {
+  const { id } = req.params;
+  const person = persons.find((person) => person.id === Number(id));
+  if (person) {
+    persons = persons.filter((person) => person.id !== Number(id));
+    res.sendStatus(200);
+  } else res.sendStatus(404);
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
