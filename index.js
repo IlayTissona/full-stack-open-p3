@@ -1,4 +1,5 @@
 require("dotenv").config();
+const fs = require("fs");
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -61,8 +62,7 @@ app.post("/api/persons", (req, res) => {
         .status(400)
         .json({ error: "Requested name has already been taken" });
     } else {
-      const id = Math.floor(Math.random() * 100);
-      requestedPerson.id = id;
+      requestedPerson.id = generateID(process.env.ID_LENGTH);
       const person = new Person(requestedPerson);
       person.save().then(() => {
         res.send(requestedPerson);
@@ -94,3 +94,25 @@ function unknownEndpoint(request, response) {
 morgan.token("body", function (req, res) {
   return JSON.stringify(req.body);
 });
+
+//----------------------------------------Functions------------------------------------
+function generateID(length) {
+  const chars =
+    "abcdefghijklmnopqrstuvwxtzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  const charsArr = chars.split("");
+  let id = "";
+
+  for (let i = 0; i < length; i++) {
+    id += charsArr[Math.floor(Math.random() * 62)];
+  }
+
+  const existingIds = JSON.parse(fs.readFileSync(process.cwd() + "/ids.json"));
+  const isExists = existingIds.some((val) => val === id);
+
+  if (isExists) {
+    return generateID(length);
+  }
+  existingIds.push(id);
+  fs.writeFileSync(process.cwd() + "/ids.json", JSON.stringify(existingIds));
+  return id;
+}
