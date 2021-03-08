@@ -84,7 +84,6 @@ app.put("/api/persons/:personId", (req, res) => {
 });
 
 app.use(unknownEndpoint);
-app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
@@ -124,13 +123,5 @@ function generateID(length) {
     id += charsArr[Math.floor(Math.random() * 62)];
   }
 
-  const existingIds = JSON.parse(fs.readFileSync(process.cwd() + "/ids.json"));
-  const isExists = existingIds.some((val) => val === id);
-
-  if (isExists) {
-    return generateID(length);
-  }
-  existingIds.push(id);
-  fs.writeFileSync(process.cwd() + "/ids.json", JSON.stringify(existingIds));
   return id;
 }
