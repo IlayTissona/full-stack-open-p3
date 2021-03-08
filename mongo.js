@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
-// const password = "TNTAKHUCK";
-const password = process.argv[2];
+require("dotenv").config();
+const password = process.env.DB_PASSWORD;
 
-const url = `mongodb+srv://ilay-tissona:${password}@firsttestcluster.0m2ja.mongodb.net/phoneBookDataBase?retryWrites=true&w=majority`;
+const url = process.env.DB_URL.replace("PASSWORD", password);
 
 mongoose.connect(url, {
   useNewUrlParser: true,
@@ -19,21 +19,4 @@ const personSchema = new mongoose.Schema({
 
 const Person = mongoose.model("Person", personSchema);
 
-if (!process.argv[3]) {
-  Person.find({}).then((result) => {
-    result.forEach((person) => {
-      console.log(person);
-    });
-    mongoose.connection.close();
-  });
-} else {
-  const person = new Person({
-    name: process.argv[3],
-    number: process.argv[4],
-    id: process.argv[5],
-  });
-  person.save().then((result) => {
-    console.log(`added ${result.name} - ${result.number} to phoneBook`);
-    mongoose.connection.close();
-  });
-}
+module.exports = mongoose.model("Person", personSchema);

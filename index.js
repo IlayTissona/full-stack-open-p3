@@ -1,7 +1,9 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3001;
 const morgan = require("morgan");
+const Person = require("./mongo.js");
 
 app.use(express.json());
 app.use(
@@ -12,58 +14,38 @@ app.use(
 
 app.use("/", express.static("./build/"));
 
-let persons = [
-  {
-    id: 1,
-    name: "Ilay Tissona",
-    number: "0536204048",
-  },
-  {
-    id: 2,
-    name: "Ilay Txcvsona",
-    number: "0536265048",
-  },
-  {
-    id: 3,
-    name: "Ilay Tighnona",
-    number: "0531578048",
-  },
-  {
-    id: 4,
-    name: "Ilay Tsvsona",
-    number: "0536597328",
-  },
-];
-
 app.get("/", (req, res) => {
   res.sendFile("./index.html");
 });
 
 app.get("/api/persons", (req, res) => {
-  res.json(persons);
+  Person.find({}).then((persons) => {
+    res.json(persons);
+  });
 });
 
 app.get("/info", (req, res) => {
-  const date = new Date().toString();
-  res.send(
-    `<div>Phone-book has info for ${persons.length} people.</div><div> ${date} </div>`
-  );
+  Person.find({}).then((persons) => {
+    const date = new Date().toString();
+    res.send(
+      `<div>Phone-book has info for ${persons.length} people.</div><div> ${date} </div>`
+    );
+  });
 });
 
-app.get("/api/persons/:id", (req, res) => {
-  const { id } = req.params;
-  const person = persons.find((person) => person.id === Number(id));
-  if (person) res.json(person);
-  else res.sendStatus(404);
+app.get("/api/persons/:personId", (req, res) => {
+  const { personId } = req.params;
+  Person.find({ id: personId }).then((person) => {
+    if (person) res.json(person);
+    else res.sendStatus(404);
+  });
 });
 
 app.delete("/api/persons/:id", (req, res) => {
   const { id } = req.params;
-  const person = persons.find((person) => person.id === Number(id));
-  if (person) {
-    persons = persons.filter((person) => person.id !== Number(id));
-    res.sendStatus(200);
-  } else res.sendStatus(404);
+  Person.findOneAndDelete({ id }).then((result) => {
+    res.send("OK");
+  });
 });
 
 app.post("/api/persons", (req, res) => {
@@ -72,16 +54,21 @@ app.post("/api/persons", (req, res) => {
     return res
       .status(400)
       .json({ error: "person must have a name and a number" });
-  let existing = persons.find((person) => person.name === requestedPerson.name);
-  if (existing)
-    return res
-      .status(400)
-      .json({ error: "Requested name has already been taken" });
 
-  const id = Math.floor(Math.random() * 100);
-  requestedPerson.id = id;
-  persons.push(requestedPerson);
-  res.send(requestedPerson);
+  Person.find({ name: requestedPerson.name }).then((person) => {
+    if (person.length) {
+      return res
+        .status(400)
+        .json({ error: "Requested name has already been taken" });
+    } else {
+      const id = Math.floor(Math.random() * 100);
+      requestedPerson.id = id;
+      const person = new Person(requestedPerson);
+      person.save().then(() => {
+        res.send(requestedPerson);
+      });
+    }
+  });
 });
 
 app.use(unknownEndpoint);
