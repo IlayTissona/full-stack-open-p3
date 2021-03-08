@@ -71,14 +71,14 @@ app.post("/api/persons", (req, res) => {
   });
 });
 
-app.put("/api/persons/:personId", (req, res) => {
-  const { name, number } = req.body;
-  const { personId } = req.params;
-  const person = { name, number, id: personId };
-  Person.findOneAndUpdate({ id: personId }, person, { new: true }).then(
+app.put("/api/persons/:personid", (req, res) => {
+  const { number } = req.body;
+  const { personid } = req.params;
+  console.log("PUT RECIEVED!");
+  Person.findOneAndUpdate({ id: personid }, { number }, { new: true }).then(
     (dbRes) => {
       console.log(dbRes);
-      res.send(person);
+      res.send(dbRes);
     }
   );
 });

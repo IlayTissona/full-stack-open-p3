@@ -1,18 +1,21 @@
-DELETE http://localhost:3001/api/persons/2
+DELETE http://localhost:3001/api/persons/5
 ###
 POST http://localhost:3001/api/persons
 Content-Type: application/json
 
   {
-    "name": "Ilay Tsvsona",
-    "number": "0536597328"
+    "name": "Ilay Tfdsona",
+    "number": "059862328"
   }
 
-  ###
-  GET  http://localhost:3001/api/persons
+###
+GET http://localhost:3001/api/persons
+Content-Type: application/json
+###
+PUT  http://localhost:3001/api/persons/EUsEZ
 Content-Type: application/json
 
   {
-    "name": "Ilay Tsvsona",
-    "number": "0536597328"
+    "name": "Ilay Tissona",
+    "number": "0500008989"
   }
