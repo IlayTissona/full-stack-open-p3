@@ -71,7 +71,20 @@ app.post("/api/persons", (req, res) => {
   });
 });
 
+app.put("/api/persons/:personId", (req, res) => {
+  const { name, number } = req.body;
+  const { personId } = req.params;
+  const person = { name, number, id: personId };
+  Person.findOneAndUpdate({ id: personId }, person, { new: true }).then(
+    (dbRes) => {
+      console.log(dbRes);
+      res.send(person);
+    }
+  );
+});
+
 app.use(unknownEndpoint);
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
@@ -89,6 +102,11 @@ function requestLogger(request, response, next) {
 
 function unknownEndpoint(request, response) {
   response.status(404).send({ error: "unknown endpoint" });
+}
+
+function errorHandler(error, req, res, next) {
+  console.log(error);
+  res.send(error);
 }
 
 morgan.token("body", function (req, res) {
