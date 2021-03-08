@@ -1,5 +1,4 @@
 require("dotenv").config();
-const fs = require("fs");
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -44,7 +43,7 @@ app.get("/api/persons/:personId", (req, res) => {
 
 app.delete("/api/persons/:id", (req, res) => {
   const { id } = req.params;
-  Person.findOneAndDelete({ id }).then((result) => {
+  Person.findOneAndDelete({ id }).then(() => {
     res.send("OK");
   });
 });
@@ -91,24 +90,11 @@ app.listen(PORT, () => {
 
 //----------------------------------------middleWares----------------------------------------------
 
-function requestLogger(request, response, next) {
-  console.log("Method:", request.method);
-  console.log("Path:  ", request.path);
-  console.log("Body:  ", request.body);
-  console.log("---");
-  next();
-}
-
 function unknownEndpoint(request, response) {
   response.status(404).send({ error: "unknown endpoint" });
 }
 
-function errorHandler(error, req, res, next) {
-  console.log(error);
-  res.send(error);
-}
-
-morgan.token("body", function (req, res) {
+morgan.token("body", function (req) {
   return JSON.stringify(req.body);
 });
 
