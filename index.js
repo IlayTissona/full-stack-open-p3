@@ -19,7 +19,9 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/persons", (req, res, next) => {
-  Person.find({}).then(res.json).catch(next);
+  Person.find({})
+    .then((persons) => res.json(persons))
+    .catch(next);
 });
 
 app.get("/info", (req, res, next) => {
